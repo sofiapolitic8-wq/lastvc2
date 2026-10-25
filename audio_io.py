@@ -289,7 +289,8 @@ class Router:
                 except Exception:
                     if self.error is None:
                         try:
-                            traceback.print_exc()          # windowed exe has no console: must never raise
+                            import engine as _em
+                            _em.log_fn("worker engine error:\n" + traceback.format_exc())
                         except Exception:
                             pass
                     self.error = "Engine error (cutevoice.log dekho)"

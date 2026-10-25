@@ -49,7 +49,10 @@ import winperf                                       # noqa: E402
 from audio_io import (Router, BUFFERS, DEFAULT_BUFFER, API_ORDER, collect_devices, find_equivalent,  # noqa: E402
                       hostapis, is_cable_input, is_virtual_output, label_name, reinit_portaudio,
                       usable_hostapis)
+import engine as engine_mod                          # noqa: E402
 from engine import Engine                            # noqa: E402
+
+engine_mod.log_fn = log                              # engine check / fallback messages go to cutevoice.log
 
 AUTO_API = "Auto (best)"
 
@@ -808,6 +811,8 @@ class App(tk.Tk):
                 txt, col = r.error, BAD
             else:
                 txt = f"Running | delay ~{r.delay_ms():.0f} ms | CPU {r.load_pct():.0f}% | dropouts {drops}"
+                if self.engine.notice:
+                    txt += " | " + self.engine.notice
                 col = "#f1c40f" if now - self.last_drop_time < 4.0 else OK
             if self.status.cget("text") != txt or self.status.cget("fg") != col:
                 self.status.config(text=txt, fg=col)

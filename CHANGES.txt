@@ -60,3 +60,11 @@ V4.2 - "Monitor start nahi hua ... WdmSyncIoctl ... WDM-KS" FIX
 - Error message mein ab audio system ka naam aur device number aata hai.
 SOUND KAHAN SUNAI DETI HAI: processed awaaz sirf 'CABLE Output' se nikalti hai (Discord/WhatsApp/OBS mic).
 Khud sunne ke liye 'Hear myself: ON' ya Windows Sound > Recording > CABLE Output > Properties > Listen.
+
+V4.3 - "Mic chal raha hai, Hear myself khulta hai, par AWAAZ NAHI" FIX
+- Engine ab khud check karta hai: start par pedalboard chain ko 1 kHz tone deta hai; output khamosh ya error aaye
+  to numpy wala SafeEngine (pitch, low cut, bass/presence/treble, gate, compressor, volume, limiter) chalu ho jata hai.
+- Chalte waqt bhi watchdog: mic tez ho aur output ~1.2 sec 0 rahe, ya pedalboard error de -> SafeEngine par switch.
+- Status line mein 'Safe engine' likha aata hai, aur cutevoice.log mein wajah. (SafeEngine mein chorus/vibrato/reverb nahi.)
+- Pehle engine ke error windowed exe mein kahin dikhte nahi the (awaaz chup-chap band); ab cutevoice.log mein likhe jate hain.
+- selftest ab 'awaaz sach mein nikalti hai' bhi check karta hai (khamosh output pehle pass ho jata tha).

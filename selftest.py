@@ -24,4 +24,12 @@ for mode in ("fast", "balanced", "safe"):
             assert y.shape == (e.hop,) and y.dtype == np.float32 and np.all(np.isfinite(y)), (mode, name)
             assert np.max(np.abs(y)) <= 1.0001, "limiter failed"
     print(mode, "ok | latency ~", round(e.latency_samples / engine.SR * 1000), "ms")
+# the engine must really let sound through (a silent output would pass every check above)
+for pitch in (0, -6, 6):
+    e = engine.Engine(dict(volume=100, pitch=pitch, pers_on=False), "balanced")
+    sig = engine._tone(e.hop * 80)
+    ys = [e.process(sig[i * e.hop:(i + 1) * e.hop]) for i in range(80)]
+    rms = float(np.sqrt(np.mean(np.concatenate(ys[-30:]) ** 2)))
+    assert rms > 0.05, f"engine output is silent (pitch {pitch}, backend {e.backend})"
+print("backend:", e.backend, "| tone rms", round(rms, 3))
 print("SELFTEST OK")
